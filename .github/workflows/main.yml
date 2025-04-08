@@ -1,7 +1,2 @@
-- name: Build with Buildozer
-  uses: ArtemSBulgakov/buildozer-action@v1
-  id: buildozer
-  with:
-    command: buildozer android debug
-    workdir: src
-    buildozer_version: stable
+- name: Buildozer action
+  uses: ArtemSBulgakov/buildozer-action@v1.1.3
