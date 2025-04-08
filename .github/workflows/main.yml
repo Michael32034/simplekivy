@@ -7,6 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install system dependencies
+      run: |
+        sudo apt install libtinfo5
       - name: Build APK
         uses: digreatbrian/buildozer-action@v2
         with:
