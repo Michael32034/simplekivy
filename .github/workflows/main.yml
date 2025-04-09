@@ -36,6 +36,8 @@ jobs:
         sudo apt-get install -y libffi-dev
         sudo apt-get install -y libbz2-dev
         sudo apt-get install autoconf automake libtool
+        sudo apt-get install --only-upgrade autoconf
+        autoreconf --install --force || echo "No files to autoreconf"
         pip install --upgrade pip setuptools wheel
 
     - name: Install Buildozer dependencies
