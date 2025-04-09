@@ -1,23 +1,56 @@
+name: Build APK with Buildozer
+
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master   # Тільки на main, можна додати інші гілки
+  pull_request:
+    branches:
+      - master   # Для PR в main також
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install system dependencies
-        run: |
-          sudo apt install libtinfo5
-      - name: Build APK
-        uses: digreatbrian/buildozer-action@v2
-        with:
-          python-version: 3.8
-          buildozer-cmd: buildozer -v android debug
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: ./bin/*.apk
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip python3-dev build-essential
+        sudo apt-get install -y git
+        sudo apt-get install -y libsqlite3-dev
+        sudo apt-get install -y zlib1g-dev
+        sudo apt-get install -y libncurses5-dev
+        sudo apt-get install -y libgdbm-dev
+        sudo apt-get install -y libnss3-dev
+        sudo apt-get install -y libssl-dev
+        sudo apt-get install -y libreadline-dev
+        sudo apt-get install -y libffi-dev
+        sudo apt-get install -y libbz2-dev
+        sudo apt-get install -y buildozer
+        pip install --upgrade pip setuptools wheel
+
+    - name: Install Buildozer dependencies
+      run: |
+        sudo apt-get install -y python3-pip
+        pip install buildozer
+        pip install cython
+
+    - name: Build APK
+      run: |
+        buildozer android debug
+        buildozer android release
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: apk
+        path: bin/*.apk
