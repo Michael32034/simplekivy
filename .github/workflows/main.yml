@@ -43,10 +43,6 @@ jobs:
       run: |
         pip install buildozer cython
 
-    - name: Clean previous builds
-      run: |
-        buildozer android clean
-
     - name: Build APK
       env:
         LOG_LEVEL: 2
