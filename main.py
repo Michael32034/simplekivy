@@ -8,7 +8,7 @@ class MyApp(App):
         return self.button
 
     def change_text(self, instance):
-        self.button.text = 'Дякую за натиск!'
+        self.button.text = 'Це І. Михайла!'
 
 if __name__ == '__main__':
     MyApp().run()
