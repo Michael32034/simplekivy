@@ -2,57 +2,21 @@ name: Build APK with Buildozer
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+      branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+    build:
+        runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+        - uses: actions/checkout@v4
+        - name: Build APK
+          uses: digreatbrian/buildozer-action@v2
+          with:
+                python-version: 3.8
+                buildozer-cmd: buildozer -v android debug
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-pip python3-dev build-essential
-        sudo apt-get install -y git libsqlite3-dev zlib1g-dev libncurses5-dev libgdbm-dev
-        sudo apt-get install -y libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev
-        sudo apt-get install -y autoconf automake libtool
-        sudo apt-get install --only-upgrade autoconf
-        pip install --upgrade pip setuptools wheel
-
-    - name: Configuration files of ubuntu
-      run: |
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
-
-    - name: Update Python-for-Android
-      run: |
-        pip install --upgrade python-for-android
-
-    - name: Install Buildozer and dependencies
-      run: |
-        pip install buildozer cython
-
-    - name: Build APK
-      env:
-        LOG_LEVEL: 2
-      run: |
-        yes | buildozer android debug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: my-apk
-        path: ./bin/*.apk
-        retention-days: 7
-        if-no-files-found: error
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v4
+          with:
+              name: package
+              path: ./bin/*.apk
